@@ -426,16 +426,32 @@ function renderPublicaciones(pubs) {
         return;
     }
 
-    const tarjetas = pubs.map(p => `
+    const tarjetas = pubs.map(p => {
+        // Intentamos desempaquetar las fotos
+        let fotos = [];
+        try {
+            fotos = JSON.parse(p.imagen);
+        } catch (e) {
+            // Si falla (porque es un producto viejo con formato de texto simple),
+            // lo metemos a un array nosotros mismos para que el código no truene.
+            fotos = p.imagen ? [p.imagen] : [];
+        }
+        // Decidimos qué imagen mostrar (la primera del array)
+        const imagenHTML = (fotos && fotos.length > 0)
+            ? `<img src="${fotos[0]}" alt="foto" style="width: 100%; height: 100%; object-fit: cover; display: block;">`
+            : `<div style="font-size: 30px; color: #aaa;">sin foto</div>`;
+
+        return `
         <div class="tarjeta-pub" onclick="window.location.href='products.html?id=${p.id_publicacion}'">
-            <div class="tarjeta-pub-img">📦</div>
+            <div class="tarjeta-pub-img">${imagenHTML}</div>
             <div class="tarjeta-pub-body">
                 <div class="tarjeta-pub-cat">${p.categoria}</div>
                 <div class="tarjeta-pub-nombre">${p.titulo}</div>
                 <div class="tarjeta-pub-precio">${formatearPrecio(p.precio)}</div>
             </div>
         </div>
-    `).join('');
+     `;
+    }).join("");
 
     card.innerHTML = `
         <h3 class="card-titulo">📦 Mis publicaciones <span class="count">${pubs.length}</span></h3>

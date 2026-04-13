@@ -5,6 +5,8 @@ Pendientes:
 --posible barra de filtro
 --validar correo institucional
 --crear cuenta y cambiar contraseña 
+--borrar publicaciones
+--programar que no se habrá el waffle si el usuario no ha iniciado sesión
 
 
 --checar linea 37  getProduct.php para redes sociales

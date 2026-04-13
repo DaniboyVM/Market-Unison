@@ -3,7 +3,7 @@
 // ARCHIVO: back-end/getProduct.php
 //  Este archivo sirve para hacer la busqueda por un producto
 // en especifico y devolverlo en JSON, lo usa product.js que
-// a su vez lo usa product.html
+// a su vez lo usa products.html
 // ============================================================
 header('Content-Type: application/json');
 

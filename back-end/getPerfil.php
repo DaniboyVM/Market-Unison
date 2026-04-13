@@ -45,7 +45,7 @@ if (!empty($u['foto_de_perfil'])) {
 }
 
 // Publicaciones del usuario
-$stmtPub = $conn->prepare("SELECT id_publicacion, titulo, precio, categoria FROM publicacion WHERE id_usuario = ? ORDER BY id_publicacion DESC");
+$stmtPub = $conn->prepare("SELECT id_publicacion, titulo, precio, categoria, imagen FROM publicacion WHERE id_usuario = ? ORDER BY id_publicacion DESC");
 $stmtPub->bind_param("i", $id_usuario);
 $stmtPub->execute();
 $resPub = $stmtPub->get_result();

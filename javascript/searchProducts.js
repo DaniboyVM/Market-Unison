@@ -76,30 +76,36 @@ function mostrarProductos(productos, esScroll = false) {
 
     // 2. GENERAR EL HTML
     const html = productos.map(producto => {
+        // 1. Intentamos desempaquetar las fotos
+        let fotos = [];
+        try {
+            // Si es un JSON (el formato nuevo), lo convierte en un array de JS
+            fotos = JSON.parse(producto.imagen);
+        } catch (e) {
+            // Si falla (porque es un producto viejo con formato de texto simple),
+            // lo metemos a un array nosotros mismos para que el código no truene.
+            fotos = producto.imagen ? [producto.imagen] : [];
+        }
+
+        // 2. Formateamos el precio
+
         const precioFormateado = "$" + parseFloat(producto.precio).toLocaleString("es-MX", {
             minimumFractionDigits: 2,
             maximumFractionDigits: 2
         });
 
-        // ==========================================
-        // LA MAGIA DE LA IMAGEN ESTÁ AQUÍ
-        // ==========================================
-        // Si el producto tiene una ruta guardada, creamos la etiqueta <img>.
-        // Si por alguna razón está vacía, le dejamos el emoji de la caja.
-        // El 'object-fit: cover' es nivel Dios para que la foto no se apachurre.
-        const imagenHTML = producto.imagen
-            ? `<img src="${producto.imagen}" alt="${producto.titulo}" >`
-            : `<div class="icono-caja">📦</div>`;
+        // 3. Decidimos qué imagen mostrar (la primera del array)
+        const imagenHTML = (fotos && fotos.length > 0)
+            ? `<img src="${fotos[0]}" alt="${producto.titulo}" style="width: 100%; height: 100%; object-fit: cover; display: block;">`
+            : `<div class="icono-caja">Sin imagen 📦</div>`;
 
         return `
             <div class="tarjeta" onclick="window.location.href='products.html?id=${producto.id_publicacion}'" style="cursor: pointer;">
-                
-                <div class="tarjeta-imagen" style="padding: 0;">
+                <div class="tarjeta-imagen">
                     ${imagenHTML}
                 </div>
-                
                 <div class="tarjeta-cuerpo">
-                    <div class="tarjeta-categoria">${producto.categoria || ""}</div>
+                    <div class="tarjeta-categoria">${producto.categoria || "Otros"}</div>
                     <div class="tarjeta-nombre">${producto.titulo}</div>
                     <div class="tarjeta-descripcion">${producto.descripcion || ""}</div>
                     <div class="tarjeta-pie">
