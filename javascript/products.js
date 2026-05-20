@@ -3,20 +3,27 @@
 // Este archivo sirve para el funcionamiento de products.html
 // ============================================================
 
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
+    try {
+        // Verificar la sesión
+        const sesionValida = await verificarSesion();
+        if (!sesionValida) return; // Si no está logueado, verificarSesion redirige solo
 
-    // 1. Leer el ID del producto de la URL
-    const parametrosURL = new URLSearchParams(window.location.search);
-    const idProducto = parametrosURL.get("id");
+        // Leer el ID del producto de la URL
+        const parametrosURL = new URLSearchParams(window.location.search);
+        const idProducto = parametrosURL.get("id");
 
-    if (idProducto) {
-        console.log("Cargando detalles del producto ID:", idProducto);
-
-        // Llamar a la función principal
-        cargarDetallesDelProducto(idProducto);
-
-    } else {
-        mostrarMensajeError("Error: No se seleccionó ningún producto en la URL.");
+        if (idProducto) {
+            console.log("Cargando detalles del producto ID:", idProducto);
+            await cargarDetallesDelProducto(idProducto);
+        } else {
+            document.body.style.display = "block";
+            mostrarMensajeError("Error: No se seleccionó ningún producto en la URL.");
+        }
+    } catch (error) {
+        console.error("Error crítico en la inicialización:", error);
+        document.body.style.display = "block";
+        mostrarMensajeError("Ocurrió un error inesperado al cargar la interfaz.");
     }
 });
 
@@ -84,7 +91,7 @@ async function cargarDetallesDelProducto(id) {
 
     } catch (error) {
         console.error("Error al cargar producto:", error);
-        mostrarMensajeError(`⚠️ Ocurrió un error al conectar con el servidor: ${error.message}`);
+        mostrarMensajeError(`Ocurrió un error al conectar con el servidor: ${error.message}`);
     }
 }
 
@@ -243,4 +250,28 @@ function mostrarMensajeError(mensaje) {
             <button onclick="window.location.href='main.html'" style="padding: 10px 20px; cursor: pointer;">Volver al MarketPlace</button>
         </div>
     `;
+}
+
+async function verificarSesion() {
+    try {
+        const respuesta = await fetch("../back-end/checkSession.php", {
+                credentials: "include" });
+        const datos = await respuesta.json();
+
+        if (datos.logeado ) {
+            console.log("Sesión activa para:", datos.nombre);
+            document.body.style.display = "block";
+            return true;
+        }else{
+             window.location.href = "login.html";
+             return false;
+
+        }
+
+    } catch (error) {
+         console.log("Error al verificar sesion "+error);
+         window.location.href = "login.html";
+         return false;
+
+    }
 }

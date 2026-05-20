@@ -13,19 +13,30 @@
 <div class="contenedor">
 
     <form class="login" action="#" id="form-login" >
-        <img src="../marketplace_unison.png" alt="[Imagen]">
+        <div class="imagen">
+             <img src="../marketplace_unison.png" alt="[Imagen]">
+        </div>
 
         <h2>Iniciar sesión</h2>
 
-        <input type="email" id="correo" placeholder="Correo Institucional" aria-label="correo" required>
+        <input type="email" id="correo" placeholder="Correo Institucional" pattern=".+@unison\.mx$"
+               title="Debes usar tu correo institucional de la Unison" aria-label="correo" required>
 
         <input type="password" id="contra" placeholder="Contraseña" aria-label="contra" required>
 
-        <button type="submit">Entrar</button>
-        <a href="accountRecovery.html" class="boton">¿Perdiste tu contaseña?</a>
-        <a href="newAccount.html" class="boton">¿No tienes una cuenta?</a>
+        <div style="display: block; width: 100%; text-align: right; margin-bottom: 15px;:" >
+            <a href="accountRecovery.html" class="link">¿Olvidaste tu contaseña?</a>
+        </div>
 
-        <div id="mensaje-error" style="color: red; margin-top: 10px;"></div>
+        <button type="submit">Entrar</button>
+
+        <div style="display: flex; width: 100%; justify-content: center; text-align: center; margin-top: 15px; gap:10px;" >
+            <p style="margin: 0">¿No tienes cuenta? </p>
+            <a href="newAccount.html" class="link">Crear cuenta</a>
+        </div>
+
+         <div id="mensaje-error" style="color: red; margin-top: 10px;"></div>
+
 
     </form>
 </div>

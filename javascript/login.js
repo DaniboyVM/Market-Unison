@@ -19,7 +19,7 @@ document.addEventListener("DOMContentLoaded", () => {
         // 3. Validar campos vacíos
         if (!correo || !password) {
             divError.style.color = "red";
-            divError.textContent = "⚠️ Completa todos los campos.";
+            divError.textContent = " Completa todos los campos.";
             return;
         }
 
@@ -35,6 +35,7 @@ document.addEventListener("DOMContentLoaded", () => {
             // 5. Enviar datos al backend
             const respuesta = await fetch("../back-end/login.php", {
                 method: "POST",
+                credentials: "include",
                 headers: {
                     "Content-Type": "application/json"
                 },
@@ -59,7 +60,7 @@ document.addEventListener("DOMContentLoaded", () => {
             } else {
 
                 divError.style.color = "red";
-                divError.textContent = "⚠️ " + datos.error;
+                divError.textContent = "Error " + datos.error;
 
             }
 
@@ -67,7 +68,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
             console.error("Error en la petición:", error);
             divError.style.color = "red";
-            divError.textContent = "⚠️ Error al conectar con el servidor.";
+            divError.textContent = "Error al conectar con el servidor.";
 
         } finally {
 

@@ -32,7 +32,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     if (!idVendedor || !idProducto) {
-        alert("⚠️ Error: Faltan datos para iniciar el chat.");
+        alert("Error: Faltan datos para iniciar el chat.");
         window.location.href = "main.html";
         return;
     }

@@ -411,7 +411,7 @@ function renderInfoUsuario(d) {
             </div>
         </div>
 
-        <a href="../back-end/logout.php" class="btn-cerrar">🚪 Cerrar sesión</a>
+        <a href="../back-end/logout.php" class="btn-cerrar">Cerrar sesión</a>
     `;
 }
 
@@ -420,7 +420,7 @@ function renderPublicaciones(pubs) {
 
     if (!pubs || pubs.length === 0) {
         card.innerHTML = `
-            <h3 class="card-titulo">📦 Mis publicaciones <span class="count">0</span></h3>
+            <h3 class="card-titulo">Mis publicaciones <span class="count">0</span></h3>
             <div class="estado-vacio-perfil">Aún no tienes publicaciones. <a href="post.html">¡Crea una!</a></div>
         `;
         return;
@@ -454,7 +454,7 @@ function renderPublicaciones(pubs) {
     }).join("");
 
     card.innerHTML = `
-        <h3 class="card-titulo">📦 Mis publicaciones <span class="count">${pubs.length}</span></h3>
+        <h3 class="card-titulo">Mis publicaciones <span class="count">${pubs.length}</span></h3>
         <div class="grid-pub">${tarjetas}</div>
     `;
 }
@@ -464,7 +464,7 @@ function renderResenas(resenas, promedio, total) {
 
     if (!resenas || resenas.length === 0) {
         card.innerHTML = `
-            <h3 class="card-titulo">⭐ Reseñas recibidas <span class="count">0</span></h3>
+            <h3 class="card-titulo">Reseñas recibidas <span class="count">0</span></h3>
             <div class="estado-vacio-perfil">Aún no tienes reseñas.</div>
         `;
         return;
@@ -481,7 +481,7 @@ function renderResenas(resenas, promedio, total) {
     `).join('');
 
     card.innerHTML = `
-        <h3 class="card-titulo">⭐ Reseñas recibidas <span class="count">${total}</span></h3>
+        <h3 class="card-titulo">Reseñas recibidas <span class="count">${total}</span></h3>
         ${items}
     `;
 }

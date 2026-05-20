@@ -1,16 +1,11 @@
 Pendientes: 
 
-
-
 --posible barra de filtro
---validar correo institucional
---crear cuenta y cambiar contraseña 
+--validar correo institucional y cambiar contraseña 
 --borrar publicaciones
---programar que no se habrá el waffle si el usuario no ha iniciado sesión
-
 
 --checar linea 37  getProduct.php para redes sociales
---checar linea 51 getProduct.php para fotos
+--checar linea 51 getProduct.php para fotos 
 
 
 --Nota: los productos del main salen de mas recientes a menos recientes
@@ -30,4 +25,3 @@ Nota de color: PHP no es el mejor lenguaje para WebSockets. Cuando tu marketplac
 
 -- ubicación del vendedor
 -- mapa
-

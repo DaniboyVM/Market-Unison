@@ -23,6 +23,17 @@ if (!filter_var($correo, FILTER_VALIDATE_EMAIL)) {
     exit;
 }
 
+// 2. Extraer el dominio (lo que está después del @)
+$partes = explode("@", $correo);
+$dominioUsuario = end($partes); // Agarra la última parte
+
+$dominioRequerido = "unison.mx";
+// 3. Comparar si es el de la escuela
+if ($dominioUsuario !== $dominioRequerido) {
+    echo json_encode(["error" => "Acceso denegado. Solo se permiten correos de la Unison."]);
+    exit;
+}
+
 // Conexión a la BD
 $servername = "localhost";
 $username   = "root";
