@@ -46,7 +46,7 @@ async function cargarDetallesDelProducto(id) {
 
         // 3. Verificar si PHP nos mandó un error (ej: producto no encontrado)
         if (datos.error) {
-            mostrarMensajeError(`⚠️ ${datos.error}`);
+            mostrarMensajeError(` ${datos.error}`);
             return;
         }
 
@@ -58,17 +58,62 @@ async function cargarDetallesDelProducto(id) {
         document.getElementById("prod-precio").textContent = formataPrecio(datos.precio);
         document.getElementById("prod-descripcion").textContent = datos.descripcion || "Este producto no tiene una descripción detallada.";
 
-        // 5. Llenar la información del VENDEDOR en el HTML
-        document.getElementById("vend-nombre").textContent = datos.nombre_vendedor || "Vendedor Desconocido";
-        document.getElementById("vend-contacto").textContent = datos.contacto_vendedor || "Sin información de contacto";
+        // ============================================================
+        // 5. NUEVO: Llenar la información completa del VENDEDOR
+        // ============================================================
+        if (datos.vendedor) {
+            // Textos básicos
+            document.getElementById("vend-nombre").textContent = datos.vendedor.nombre || "Vendedor Desconocido";
+            document.getElementById("vend-contacto").textContent = datos.vendedor.departamento || "Sin información";
 
-        // 6. Configurar la acción del botón chat
+            const txtHorario = document.getElementById("vend-horario");
+            if (txtHorario) txtHorario.textContent = "Horario: " + (datos.vendedor.horario || "No especificado");
+
+            // Foto de perfil
+            const imgFoto = document.getElementById("vend-foto");
+            if (imgFoto && datos.vendedor.foto) {
+                imgFoto.src = datos.vendedor.foto;
+            }
+
+            // Botón de WhatsApp
+            const btnWa = document.getElementById("btn-whatsapp");
+            if (btnWa) {
+                if (datos.vendedor.whatsapp) {
+                    let waUrl = datos.vendedor.whatsapp.startsWith("http")
+                        ? datos.vendedor.whatsapp
+                        : `https://wa.me/${datos.vendedor.whatsapp}`;
+                    btnWa.href = waUrl;
+                    btnWa.style.display = "inline-block";
+                } else {
+                    btnWa.style.display = "none";
+                }
+            }
+
+            // Botón de Instagram
+            const btnIg = document.getElementById("btn-instagram");
+            if (btnIg) {
+                if (datos.vendedor.instagram) {
+                    let igUser = datos.vendedor.instagram.replace("@", "");
+                    let igUrl = datos.vendedor.instagram.startsWith("http")
+                        ? datos.vendedor.instagram
+                        : `https://instagram.com/${igUser}`;
+                    btnIg.href = igUrl;
+                    btnIg.style.display = "inline-block";
+                } else {
+                    btnIg.style.display = "none";
+                }
+            }
+        }
+
+        // 6. Configurar la acción del botón chat (Chat Interno)
         const btnContactar = document.getElementById("btn-contactar");
-        btnContactar.onclick = () => {
-            // Mandamos al usuario a chat.html con los IDs necesarios en la URL
-            const urlChat = `chat.html?vendedor=${encodeURIComponent(datos.id_vendedor)}&producto=${encodeURIComponent(id)}`;
-            window.location.href = urlChat;
-        };
+        if (btnContactar) {
+            btnContactar.onclick = () => {
+                // Mandamos al usuario a chat.html con los IDs necesarios en la URL
+                const urlChat = `chat.html?vendedor=${encodeURIComponent(datos.id_vendedor)}&producto=${encodeURIComponent(id)}`;
+                window.location.href = urlChat;
+            };
+        }
 
         // 7. --- MAGIA PARA LAS FOTOS ---
         // 'datos.imagen' esta en un formato JSON
@@ -77,11 +122,9 @@ async function cargarDetallesDelProducto(id) {
         if (datos.imagen) {
             try {
                 // 1. Intentamos desempaquetar el JSON de la base de datos.
-                // Si es una publicación nueva, tendremos un arreglo como: ["../uploads/foto1.jpg", "../uploads/foto2.jpg"]
                 urlsImagenes = JSON.parse(datos.imagen);
             } catch (e) {
-                // 2. Si falla el JSON (porque es un producto viejo con formato de texto simple),
-                // tratamos la ruta como una única imagen.
+                // 2. Si falla el JSON, tratamos la ruta como una única imagen.
                 urlsImagenes = [datos.imagen];
             }
         }
@@ -94,8 +137,6 @@ async function cargarDetallesDelProducto(id) {
         mostrarMensajeError(`Ocurrió un error al conectar con el servidor: ${error.message}`);
     }
 }
-
-
 
 
 // ------------------------------------------------------------
@@ -128,11 +169,10 @@ function mostrarImagenes(imagenes) {
     }
 
     // 1. INYECTAMOS HTML Y CSS DIRECTO AL CONTENEDOR
-    // (Usamos un string literal para armar todo el esqueleto visual de un golpe)
     let html = `
         <style>
             /* Estructura Principal */
-            .fb-carousel { width: 100%; border-radius: 8px; overflow: hidden; display: flex; flex-direction: column; background: whitesmoke; }/*  #1a1a1a*/
+            .fb-carousel { width: 100%; border-radius: 8px; overflow: hidden; display: flex; flex-direction: column; background: whitesmoke; }
             
             /* Área de la foto grande */
             .fb-track-container { position: relative; width: 100%; height: 400px; overflow: hidden; touch-action: pan-y; }
@@ -181,7 +221,6 @@ function mostrarImagenes(imagenes) {
         </div>
     `;
 
-    // Metemos el código al HTML
     contenedorPrincipal.innerHTML = html;
 
     // 2. LÓGICA DE MOVIMIENTO Y SWIPE
@@ -192,33 +231,25 @@ function mostrarImagenes(imagenes) {
     const thumbs = document.querySelectorAll(".fb-thumb");
     const swipeArea = document.getElementById("swipeArea");
 
-    // Función maestra que mueve el carrusel
     function moverA(indice) {
         indiceActual = indice;
-        // Animamos el riel usando porcentajes (-100% es la 2da foto, -200% la 3ra, etc.)
         track.style.transform = `translateX(-${indiceActual * 100}%)`;
 
-        // Apagamos/Prendemos flechas si estamos al inicio o al final
         btnPrev.disabled = indiceActual === 0;
         btnNext.disabled = indiceActual === imagenesValidas.length - 1;
 
-        // Iluminamos la miniatura correcta
         thumbs.forEach(t => t.classList.remove("active"));
         thumbs[indiceActual].classList.add("active");
-        // Centramos la miniatura activa en caso de que sean muchas
         thumbs[indiceActual].scrollIntoView({ behavior: "smooth", block: "nearest", inline: "center" });
     }
 
-    // Eventos de Click (Flechas)
     if(btnPrev) btnPrev.addEventListener("click", () => { if (indiceActual > 0) moverA(indiceActual - 1); });
     if(btnNext) btnNext.addEventListener("click", () => { if (indiceActual < imagenesValidas.length - 1) moverA(indiceActual + 1); });
 
-    // Eventos de Click (Miniaturas)
     thumbs.forEach(thumb => {
         thumb.addEventListener("click", (e) => moverA(parseInt(e.target.dataset.index)));
     });
 
-    // 3. MAGIA PARA CELULARES (Detectar el "Swipe" del dedo)
     let touchStartX = 0;
     let touchEndX = 0;
 
@@ -230,16 +261,14 @@ function mostrarImagenes(imagenes) {
         touchEndX = e.changedTouches[0].screenX;
         let dif = touchStartX - touchEndX;
 
-        // Si el usuario movió el dedo más de 50 pixeles...
         if (dif > 50 && indiceActual < imagenesValidas.length - 1) {
-            moverA(indiceActual + 1); // Swipe hacia la izquierda (Siguiente)
+            moverA(indiceActual + 1);
         } else if (dif < -50 && indiceActual > 0) {
-            moverA(indiceActual - 1); // Swipe hacia la derecha (Anterior)
+            moverA(indiceActual - 1);
         }
     }, {passive: true});
 }
 
-// Muestra un mensaje de error en la página
 function mostrarMensajeError(mensaje) {
     const main = document.querySelector(".contenedor-producto");
     main.innerHTML = `
@@ -265,13 +294,10 @@ async function verificarSesion() {
         }else{
              window.location.href = "login.html";
              return false;
-
         }
-
     } catch (error) {
          console.log("Error al verificar sesion "+error);
          window.location.href = "login.html";
          return false;
-
     }
 }

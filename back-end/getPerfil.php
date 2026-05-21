@@ -1,7 +1,7 @@
 <?php
 // ============================================================
-// ARCHIVO: back-end/getPerfil.php
-// Devuelve los datos del perfil del usuario en sesión
+// ARCHIVO: back-end/getPerfil.php (ACTUALIZADO Y COMPATIBLE)
+// Devuelve los datos del perfil del usuario en sesión e incluye redes sociales
 // ============================================================
 session_start();
 header('Content-Type: application/json');
@@ -24,7 +24,7 @@ if ($conn->connect_error) {
     exit;
 }
 
-// Datos del usuario
+// 1. Datos base del usuario
 $stmt = $conn->prepare("SELECT nombre, correo, departamento, horario, tipo_usuario, foto_de_perfil FROM usuario WHERE id_usuario = ?");
 $stmt->bind_param("i", $id_usuario);
 $stmt->execute();
@@ -38,13 +38,33 @@ if ($res->num_rows === 0) {
 $u = $res->fetch_assoc();
 $stmt->close();
 
-// Foto de perfil en base64 si existe
+// 2. DETECTAR LA FOTO ES RUTA (TEXTO)
 $foto = null;
 if (!empty($u['foto_de_perfil'])) {
-    $foto = 'data:image/jpeg;base64,' . base64_encode($u['foto_de_perfil']);
+    // Si la cadena empieza con "../" o "http", es una ruta de archivo de texto directa
+    if (strpos($u['foto_de_perfil'], '../') === 0 || strpos($u['foto_de_perfil'], 'http') === 0) {
+        $foto = $u['foto_de_perfil'];
+    }
 }
 
-// Publicaciones del usuario
+// 3. NUEVO: Obtener las redes sociales del usuario (WhatsApp e Instagram)
+$whatsapp = "";
+$instagram = "";
+$stmtRed = $conn->prepare("SELECT tipo, enlace FROM red WHERE id_usuario = ?");
+$stmtRed->bind_param("i", $id_usuario);
+$stmtRed->execute();
+$resRed = $stmtRed->get_result();
+
+while ($r = $resRed->fetch_assoc()) {
+    if (strtolower($r['tipo']) === 'whatsapp') {
+        $whatsapp = $r['enlace'];
+    } elseif (strtolower($r['tipo']) === 'instagram') {
+        $instagram = $r['enlace'];
+    }
+}
+$stmtRed->close();
+
+// 4. Publicaciones del usuario (Mantenemos intacto)
 $stmtPub = $conn->prepare("SELECT id_publicacion, titulo, precio, categoria, imagen FROM publicacion WHERE id_usuario = ? ORDER BY id_publicacion DESC");
 $stmtPub->bind_param("i", $id_usuario);
 $stmtPub->execute();
@@ -56,7 +76,7 @@ while ($p = $resPub->fetch_assoc()) {
 }
 $stmtPub->close();
 
-// Reseñas recibidas (sobre las publicaciones del usuario)
+// 5. Reseñas recibidas (Mantenemos intacto)
 $stmtRes = $conn->prepare("
     SELECT r.calificacion, r.comentario, u.nombre AS revisor, r.id_resena
     FROM resena r
@@ -76,7 +96,7 @@ while ($r = $resReseñas->fetch_assoc()) {
 }
 $stmtRes->close();
 
-// Promedio de calificación
+// 6. Promedio de calificación (Mantenemos intacto)
 $stmtProm = $conn->prepare("
     SELECT AVG(r.calificacion) AS promedio, COUNT(*) AS total
     FROM resena r
@@ -90,6 +110,7 @@ $stmtProm->close();
 
 $conn->close();
 
+// 7. RESPUESTA JSON FINAL (Conservamos estructura exacta y añadimos las nuevas llaves)
 echo json_encode([
     "exito"        => true,
     "nombre"       => $u['nombre'],
@@ -98,9 +119,12 @@ echo json_encode([
     "horario"      => $u['horario'],
     "tipo_usuario" => $u['tipo_usuario'],
     "foto"         => $foto,
+    "whatsapp"     => $whatsapp,   // <-- Agregado para el formulario
+    "instagram"    => $instagram,  // <-- Agregado para el formulario
     "publicaciones"=> $publicaciones,
     "resenas"      => $resenas,
     "promedio"     => round($resProm['promedio'] ?? 0, 1),
     "total_resenas"=> (int)($resProm['total'] ?? 0)
 ]);
+exit;
 ?>

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 10-04-2026 a las 02:22:32
+-- Tiempo de generación: 22-05-2026 a las 01:13:41
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -20,8 +20,6 @@ SET time_zone = "+00:00";
 --
 -- Base de datos: `marketplace`
 --
-CREATE DATABASE IF NOT EXISTS `marketplace` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
-USE `marketplace`;
 
 -- --------------------------------------------------------
 
@@ -29,29 +27,14 @@ USE `marketplace`;
 -- Estructura de tabla para la tabla `mensaje`
 --
 
-DROP TABLE IF EXISTS `mensaje`;
-CREATE TABLE IF NOT EXISTS `mensaje` (
-  `id_mensaje` int(11) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `mensaje` (
+  `id_mensaje` int(11) NOT NULL,
   `id_remitente` int(10) UNSIGNED NOT NULL,
   `id_destinatario` int(10) UNSIGNED NOT NULL,
   `id_publicacion` int(10) UNSIGNED NOT NULL,
   `contenido` text NOT NULL,
-  `fecha_envio` timestamp NOT NULL DEFAULT current_timestamp(),
-  PRIMARY KEY (`id_mensaje`),
-  KEY `idx_remitente` (`id_remitente`),
-  KEY `idx_destinatario` (`id_destinatario`),
-  KEY `idx_publicacion` (`id_publicacion`)
-) ENGINE=InnoDB AUTO_INCREMENT=41 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- RELACIONES PARA LA TABLA `mensaje`:
---   `id_destinatario`
---       `usuario` -> `id_usuario`
---   `id_publicacion`
---       `publicacion` -> `id_publicacion`
---   `id_remitente`
---       `usuario` -> `id_usuario`
---
+  `fecha_envio` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `mensaje`
@@ -102,25 +85,16 @@ INSERT INTO `mensaje` (`id_mensaje`, `id_remitente`, `id_destinatario`, `id_publ
 -- Estructura de tabla para la tabla `publicacion`
 --
 
-DROP TABLE IF EXISTS `publicacion`;
-CREATE TABLE IF NOT EXISTS `publicacion` (
-  `id_publicacion` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+CREATE TABLE `publicacion` (
+  `id_publicacion` int(10) UNSIGNED NOT NULL,
   `titulo` varchar(45) NOT NULL,
   `descripcion` varchar(350) NOT NULL,
   `precio` decimal(10,2) NOT NULL,
   `estado` varchar(45) NOT NULL,
   `categoria` varchar(45) NOT NULL,
-  `imagen` mediumblob NOT NULL,
-  `id_usuario` int(10) UNSIGNED NOT NULL,
-  PRIMARY KEY (`id_publicacion`),
-  KEY `id_usuario` (`id_usuario`)
-) ENGINE=InnoDB AUTO_INCREMENT=113 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- RELACIONES PARA LA TABLA `publicacion`:
---   `id_usuario`
---       `usuario` -> `id_usuario`
---
+  `imagen` varchar(320) NOT NULL,
+  `id_usuario` int(10) UNSIGNED NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `publicacion`
@@ -139,7 +113,10 @@ INSERT INTO `publicacion` (`id_publicacion`, `titulo`, `descripcion`, `precio`, 
 (109, 'Porta laptop', 'Funda de tela, para 15 pulgadas', 210.00, '', 'Accesorios', '', 1111),
 (110, 'Regla metálica 30cm', 'Aluminio anodizado, marcas grabadas', 75.00, '', 'Papelería', '', 1112),
 (111, 'Monitor 24\"', 'Full HD IPS, 75Hz, sin bordes', 3200.00, '', 'Electrónica', '', 1112),
-(112, 'cocaina', 'polvo magico', 0.01, '', 'Papelería', 0x2e2e2f75706c6f6164732f363964376565666361323436355f6d61726b6574706c6163655f756e69736f6e2e706e67, 1112);
+(112, 'cocaina', 'polvo magico', 0.01, '', 'Papelería', '../uploads/69d7eefca2465_marketplace_unison.png', 1112),
+(113, 'lol', '', 10.00, 'Nuevo', 'Otros', '[\"..\\/uploads\\/69dc27d4ac7e7_descarga.png\"]', 1111),
+(114, 'prueba2', 'prueba multiples fotos', 100.00, 'Nuevo', 'Otros', '[\"..\\/uploads\\/69dc281f8b6e6_descarga.png\",\"..\\/uploads\\/69dc281f8b996_marketplace_unison.jpg\"]', 1111),
+(115, 'Nigas', 'Nigas en potencia', 1.00, 'Usado - Aceptable', 'Otros', '[\"..\\/uploads\\/6a0e2bd5dda66_907d4a04-2444-47cb-b93f-2a8b43e520a3.jpeg\",\"..\\/uploads\\/6a0e2bd5ddf73_1b885ba1-6603-4f96-b7fb-51ad8976a881.jpeg\",\"..\\/uploads\\/6a0e2bd5de1d9_f5823bb1-4914-4c44-8ca9-76ba6b663f87.jpeg\"]', 1114);
 
 -- --------------------------------------------------------
 
@@ -147,19 +124,19 @@ INSERT INTO `publicacion` (`id_publicacion`, `titulo`, `descripcion`, `precio`, 
 -- Estructura de tabla para la tabla `red`
 --
 
-DROP TABLE IF EXISTS `red`;
-CREATE TABLE IF NOT EXISTS `red` (
+CREATE TABLE `red` (
   `id_usuario` int(10) UNSIGNED NOT NULL,
   `tipo` varchar(45) DEFAULT NULL,
-  `enlace` varchar(100) DEFAULT NULL,
-  KEY `id_usuario` (`id_usuario`)
+  `enlace` varchar(100) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- RELACIONES PARA LA TABLA `red`:
---   `id_usuario`
---       `usuario` -> `id_usuario`
+-- Volcado de datos para la tabla `red`
 --
+
+INSERT INTO `red` (`id_usuario`, `tipo`, `enlace`) VALUES
+(1111, 'whatsapp', '6666'),
+(1111, 'instagram', '@peneRicolino');
 
 -- --------------------------------------------------------
 
@@ -167,25 +144,13 @@ CREATE TABLE IF NOT EXISTS `red` (
 -- Estructura de tabla para la tabla `resena`
 --
 
-DROP TABLE IF EXISTS `resena`;
-CREATE TABLE IF NOT EXISTS `resena` (
-  `id_resena` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+CREATE TABLE `resena` (
+  `id_resena` int(10) UNSIGNED NOT NULL,
   `id_usuario` int(10) UNSIGNED NOT NULL,
   `id_publicacion` int(10) UNSIGNED NOT NULL,
   `calificacion` int(10) UNSIGNED DEFAULT NULL,
-  `comentario` varchar(500) DEFAULT NULL,
-  PRIMARY KEY (`id_resena`),
-  KEY `id_usuario` (`id_usuario`),
-  KEY `id_publicacion` (`id_publicacion`)
+  `comentario` varchar(500) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- RELACIONES PARA LA TABLA `resena`:
---   `id_publicacion`
---       `publicacion` -> `id_publicacion`
---   `id_usuario`
---       `usuario` -> `id_usuario`
---
 
 -- --------------------------------------------------------
 
@@ -193,31 +158,96 @@ CREATE TABLE IF NOT EXISTS `resena` (
 -- Estructura de tabla para la tabla `usuario`
 --
 
-DROP TABLE IF EXISTS `usuario`;
-CREATE TABLE IF NOT EXISTS `usuario` (
-  `id_usuario` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+CREATE TABLE `usuario` (
+  `id_usuario` int(10) UNSIGNED NOT NULL,
   `correo` varchar(45) NOT NULL,
   `password` varchar(255) NOT NULL,
   `nombre` varchar(50) NOT NULL,
   `departamento` varchar(60) NOT NULL,
   `horario` varchar(45) DEFAULT NULL,
-  `foto_de_perfil` mediumblob DEFAULT NULL,
-  `tipo_usuario` varchar(45) NOT NULL,
-  PRIMARY KEY (`id_usuario`),
-  UNIQUE KEY `correo` (`correo`)
-) ENGINE=InnoDB AUTO_INCREMENT=1113 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- RELACIONES PARA LA TABLA `usuario`:
---
+  `foto_de_perfil` varchar(255) DEFAULT NULL,
+  `tipo_usuario` varchar(45) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `usuario`
 --
 
 INSERT INTO `usuario` (`id_usuario`, `correo`, `password`, `nombre`, `departamento`, `horario`, `foto_de_perfil`, `tipo_usuario`) VALUES
-(1111, 'tetas@gmail.com', '1234', 'tetasmuygrandes', 'fisica', NULL, NULL, 'vendedor'),
-(1112, 'penes@gmail.com', '1234', 'pene?', 'fisica', NULL, NULL, 'vendedor');
+(1111, 'tetas@unison.mx', '1234', 'pene Rico', 'Sociales', ' matutino', '../uploads/avatar_1111_6a0f7f49549fd.jpg', 'vendedor'),
+(1112, 'penes@gmail.com', '1234', 'pene?', 'fisica', NULL, NULL, 'vendedor'),
+(1113, 'xdanielalberto@gmail.com', 'hola', 'daniel', 'Matemáticas', NULL, NULL, 'comprador'),
+(1114, 'pene@unison.mx', 'abcd', 'pene', 'Otro', NULL, NULL, 'comprador'),
+(1115, 'sddas@unison.mx', 'qwer', 'asda asdas', 'Matemáticas', NULL, NULL, 'comprador');
+
+--
+-- Índices para tablas volcadas
+--
+
+--
+-- Indices de la tabla `mensaje`
+--
+ALTER TABLE `mensaje`
+  ADD PRIMARY KEY (`id_mensaje`),
+  ADD KEY `idx_remitente` (`id_remitente`),
+  ADD KEY `idx_destinatario` (`id_destinatario`),
+  ADD KEY `idx_publicacion` (`id_publicacion`);
+
+--
+-- Indices de la tabla `publicacion`
+--
+ALTER TABLE `publicacion`
+  ADD PRIMARY KEY (`id_publicacion`),
+  ADD KEY `id_usuario` (`id_usuario`);
+
+--
+-- Indices de la tabla `red`
+--
+ALTER TABLE `red`
+  ADD KEY `id_usuario` (`id_usuario`);
+
+--
+-- Indices de la tabla `resena`
+--
+ALTER TABLE `resena`
+  ADD PRIMARY KEY (`id_resena`),
+  ADD KEY `id_usuario` (`id_usuario`),
+  ADD KEY `id_publicacion` (`id_publicacion`);
+
+--
+-- Indices de la tabla `usuario`
+--
+ALTER TABLE `usuario`
+  ADD PRIMARY KEY (`id_usuario`),
+  ADD UNIQUE KEY `correo` (`correo`);
+
+--
+-- AUTO_INCREMENT de las tablas volcadas
+--
+
+--
+-- AUTO_INCREMENT de la tabla `mensaje`
+--
+ALTER TABLE `mensaje`
+  MODIFY `id_mensaje` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=41;
+
+--
+-- AUTO_INCREMENT de la tabla `publicacion`
+--
+ALTER TABLE `publicacion`
+  MODIFY `id_publicacion` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=116;
+
+--
+-- AUTO_INCREMENT de la tabla `resena`
+--
+ALTER TABLE `resena`
+  MODIFY `id_resena` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT de la tabla `usuario`
+--
+ALTER TABLE `usuario`
+  MODIFY `id_usuario` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1116;
 
 --
 -- Restricciones para tablas volcadas

@@ -14,6 +14,7 @@ Pendientes:
 
 
 ------DESEABLES:
+-- crear apartados por campus
 -- optimización en el chat.
  Por ahora esta implementado el método Paginación Infinita (Lazy Loading). sugerencia:
 	Dejar de preguntar y empezar a "escuchar" (WebSockets)

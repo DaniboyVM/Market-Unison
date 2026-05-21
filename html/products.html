@@ -25,6 +25,7 @@
 
         <section class="seccion-info">
             <div class="info-basica">
+                <span class="etiqueta-categoria">Categoría: </span>
                 <span class="etiqueta-categoria" id="prod-categoria">Categoría</span>
                 <h1 class="titulo-producto" id="prod-titulo">Cargando producto...</h1>
                 <h2 class="precio-producto" id="prod-precio">$0.00</h2>
@@ -38,16 +39,28 @@
             <div class="info-vendedor">
                 <h3>Información del Vendedor</h3>
                 <div class="tarjeta-vendedor">
-                    <div class="avatar-vendedor">👤</div>
+                    <div class="avatar-vendedor">
+                        <img id="vend-foto" src="../uploads/default-avatar.jpg" alt="Vendedor" style="width: 50px; height: 50px; border-radius: 50%; object-fit: cover;">
+                    </div>
                     <div class="datos-vendedor">
                         <p class="nombre-vendedor" id="vend-nombre">Cargando vendedor...</p>
                         <p class="facultad-vendedor" id="vend-contacto">...</p>
+                        <p id="vend-horario" style="font-size: 0.85em; color: #666; margin-top: 4px;">Horario: ...</p>
                     </div>
                 </div>
 
-                <button class="btn-mensaje" id="btn-contactar">
+                <button class="btn-mensaje" id="btn-contactar" style="margin-bottom: 10px;">
                     💬 Enviar Mensaje al Vendedor
                 </button>
+
+                <div style="display: flex; gap: 10px; width: 100%;">
+                    <a id="btn-whatsapp" href="#" target="_blank" style="display: none; flex: 1; text-align: center; background: #25D366; color: white; padding: 12px; border-radius: 5px; text-decoration: none; font-weight: bold; font-size: 14px;">
+                        WhatsApp
+                    </a>
+                    <a id="btn-instagram" href="#" target="_blank" style="display: none; flex: 1; text-align: center; background: #E1306C; color: white; padding: 12px; border-radius: 5px; text-decoration: none; font-weight: bold; font-size: 14px;">
+                        Instagram
+                    </a>
+                </div>
             </div>
         </section>
 
