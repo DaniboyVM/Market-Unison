@@ -276,7 +276,7 @@ function mostrarMensajeError(mensaje) {
             <h2>Error al cargar el producto</h2>
             <p>${mensaje}</p>
             <br>
-            <button onclick="window.location.href='main.html'" style="padding: 10px 20px; cursor: pointer;">Volver al MarketPlace</button>
+            <button onclick="window.location.href='index.html'" style="padding: 10px 20px; cursor: pointer;">Volver al MarketPlace</button>
         </div>
     `;
 }
