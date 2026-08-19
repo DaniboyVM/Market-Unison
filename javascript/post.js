@@ -80,7 +80,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 mensajeRespuesta.style.color = "green";
                 mensajeRespuesta.textContent = "¡Producto publicado con éxito! Redirigiendo...";
                 // Lo mandamos al main
-                setTimeout(() => { window.location.href = "index.html"; }, 1500);
+                setTimeout(() => { window.location.href = "../index.html"; }, 1500);
             } else {
                 mensajeRespuesta.style.color = "red";
                 mensajeRespuesta.textContent = resultado.error || "Hubo un error al publicar.";
