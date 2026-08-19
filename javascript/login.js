@@ -54,7 +54,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 divError.textContent = datos.mensaje + " Redirigiendo...";
 
                 setTimeout(() => {
-                    window.location.href = "../index.html";
+                    window.location.href = "main.html";
                 }, 1000);
 
             } else {

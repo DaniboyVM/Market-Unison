@@ -33,7 +33,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (!idVendedor || !idProducto) {
         alert("Error: Faltan datos para iniciar el chat.");
-        window.location.href = "../index.html";
+        window.location.href = "main.html";
         return;
     }
 

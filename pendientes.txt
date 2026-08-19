@@ -4,6 +4,8 @@ Pendientes:
 --validar correo institucional y cambiar contraseña 
 --borrar publicaciones
 
+--checar linea 37  getProduct.php para redes sociales
+--checar linea 51 getProduct.php para fotos 
 
 
 --Nota: los productos del main salen de mas recientes a menos recientes
